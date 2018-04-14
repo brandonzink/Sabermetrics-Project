@@ -3,7 +3,3 @@ e.RUN2_DEST_ID, e.RUN3_DEST_ID from events e
 join rosters ros on ros.PLAYER_ID = e.BAT_ID
 where ERR_CT = 0 and (e.BAT_DEST_ID != 0 or e.RUN1_DEST_ID != 0 or e.RUN2_DEST_ID != 0 or e.RUN3_DEST_ID != 0)
 group by e.BAT_ID; #and substring(e.GAME_ID,4,4));
-
-select * from rosters;
-
-select * from events;
