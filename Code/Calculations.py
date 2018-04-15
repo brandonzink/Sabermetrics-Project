@@ -3,7 +3,7 @@ import matplotlib.pylab as plt
 import pandas as pd
 
 #Set to 1 to use the test file instead of the full one, faster excecution
-test = 1
+test = 0
 
 #Return the RE24 expected run value for a given out/base situation
 #first/second/third should be 1 if runner on, else 0
@@ -68,7 +68,7 @@ def RE24_lookup(outs, first, second, third):
 def REC_calculation(pre_outs, pre_first, pre_second, pre_third, post_outs, post_first, post_second, post_third, runs_scored):
     
     #Get the before and after expected run values
-    pre_REC = RE24_lokup(pre_outs, pre_first, pre_second, pre_third)
+    pre_REC = RE24_lookup(pre_outs, pre_first, pre_second, pre_third)
     post_REC = RE24_lookup(post_outs, post_first, post_second, post_third)
 
     #Calculate and return the REC value
@@ -107,6 +107,26 @@ def bool_baserunners(df):
     df = df.drop(['1B Runner', '2B Runner', '3B Runner'], axis = 1)
     return df
 
+#The runner first, second, third function take the base state as an int between 0 and 7 and return if
+#there is a runner on the appropriate bag (1 if true, else 0). Used as helper functions for calculations
+def runner_first(base_state):
+    if (base_state == 1 or base_state == 3 or base_state == 5 or base_state == 7):
+        return 1
+    else:
+        return 0
+
+def runner_second(base_state):
+    if (base_state == 2 or base_state == 3 or base_state == 6 or base_state == 7):
+        return 1
+    else:
+        return 0
+
+def runner_third(base_state):
+    if (base_state == 4 or base_state == 5 or base_state == 6 or base_state == 7):
+        return 1
+    else:
+        return 0
+
 #Reads the csv files, returns a dataframe
 def read_in_data():
     global test
@@ -123,7 +143,36 @@ def main():
     #Get boolean values instead of baserunner ID
     BaseDF = bool_baserunners(BaseDF)
 
-    print(BaseDF.head(20))
+    #Create the columns to store the data, set them to -1.0
+    BaseDF['REC'] = -1.0
+    BaseDF['TBA'] = -1.0
+    BaseDF['TPBA'] = -1.0
+
+    #Keeps track of the number of AB per player which we count
+    BaseDF['Qual. AB'] = 1
+
+    #Loop through dataframe, row by row, to calculate REC, TBA, and TPBA stats
+    for i, row in BaseDF.iterrows():
+
+        #Calculate REC using REC_calculation function
+        REC = REC_calculation(row['Outs'], runner_first(int(row['Start Bases'])), runner_second(int(row['Start Bases'])), runner_third(int(row['Start Bases'])), row['Outs']+row['Event Outs'], runner_first(int(row['End Bases'])), runner_second(int(row['End Bases'])), runner_third(int(row['End Bases'])), row['Event Runs'])
+        BaseDF.at[i,'REC'] = REC
+
+        #Calculate TBA using TBA function
+        TBA_num = TBA(row["Batter Dest."], row["1B Runner Dest."], row["2B Runner Dest."], row["3B Runner Dest"])
+        BaseDF.at[i, 'TBA'] = TBA_num
+
+        #Calculate TPBA using TPBA function
+        TPBA_num = TPBA(runner_first(int(row['Start Bases'])), runner_second(int(row['Start Bases'])), runner_third(int(row['Start Bases'])))
+        BaseDF.at[i, 'TPBA'] = TPBA_num
+
+    #Group the dataframe into player/year combos
+    BaseDF = BaseDF.groupby(['NAME','Batter ID','Year']).sum()
+
+    #Calculate the %TBA statistic
+    BaseDF['%TBA'] = BaseDF['TBA']/BaseDF['TPBA']
+
+    BaseDF.to_csv('AdvancedBaseStats.csv', columns=['Qual. AB', 'REC', '%TBA'])
     
 
 
