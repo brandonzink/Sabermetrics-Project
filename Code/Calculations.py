@@ -140,6 +140,8 @@ def read_in_data():
 def main():
     #Get the data
     BaseDF = read_in_data()
+    #The data has 4 duplicates of every row, so select every fourth row of the dataframe
+    BaseDF = BaseDF[BaseDF.index % 4 == 0]
     #Get boolean values instead of baserunner ID
     BaseDF = bool_baserunners(BaseDF)
 
