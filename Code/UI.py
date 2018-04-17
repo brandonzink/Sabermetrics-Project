@@ -118,9 +118,7 @@ def menu(data):
     '5: Graph of REC v. Qualifying ABs',
     '6: Graph of %TBA v. REC',
     '7: Graph of %TBA by year',
-    '8: Graph of REC by year',
-    '9: Explanation of %TBA',
-    '10: Explanation of REC']
+    '8: Graph of REC by year']
 
     #Prints options, gets user inputs
     print('[ MENU ]')
