@@ -95,6 +95,16 @@ def perTBA_v_REC(data):
     plt.show()
     return
 
+#Plots side by side boxplots for each year of %TBA
+def perTBA_by_year(data):
+    data.boxplot(column=['%TBA'], by='Year')
+    plt.show()
+
+#Plots side by side boxplots for each year of %TBA
+def REC_by_year(data):
+    data.boxplot(column=['REC'], by='Year')
+    plt.show()
+
 #Print the menu, takes user inputs, and calls appropriate functions.
 def menu(data):
 
@@ -110,51 +120,52 @@ def menu(data):
     '7: Graph of %TBA by year',
     '8: Graph of REC by year',
     '9: Explanation of %TBA',
-    '10: Explanation of %REC']
+    '10: Explanation of REC']
 
     #Prints options, gets user inputs
     print('[ MENU ]')
     for i in range(0,len(user_options)):
         print(user_options[i])
-    option = int(input("> "))
+    option = input("> ")
 
-    if option == 0:
+    #Catches if the input is not an int
+    if option.isdigit() == False:
+        print('Invalid option. Please try again.')
+        print('')
+        menu(data)
+
+    if int(option) == 0:
         return
 
-    elif option == 1:
+    elif int(option) == 1:
         option = int(input('How many top %TBA players would you like: > '))
         top_perTBA_seasons(data, option, qualifier)
 
-    elif option == 2:
+    elif int(option) == 2:
         option = int(input('How many top REC players would you like: > '))
         top_REC_seasons(data, option, qualifier)
 
-    elif option == 3:
+    elif int(option) == 3:
         qualifier = int(input('New qualifying ABs number: >'))
 
-    elif option == 4:
+    elif int(option) == 4:
         perTBA_v_AB(data, qualifier)
 
-    elif option == 5:
+    elif int(option) == 5:
         REC_v_AB(data, qualifier)
 
-    elif option == 6:
+    elif int(option) == 6:
         perTBA_v_REC(data)
 
-    elif option == 7:
+    elif int(option) == 7:
         perTBA_by_year(data)
 
-    elif option == 8:
+    elif int(option) == 8:
         REC_by_year(data)
 
-    elif option == 9:
-        Print('bleh')
-
-    elif option == 10:
-        Print('bleh2')
-
     else:
-        Print('Invalid option. Please try again.')
+        print('Invalid option. Please try again.')
+        print('')
 
     menu(data)
 
