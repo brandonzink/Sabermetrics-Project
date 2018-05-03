@@ -107,6 +107,23 @@ def bool_baserunners(df):
     df = df.drop(['1B Runner', '2B Runner', '3B Runner'], axis = 1)
     return df
 
+#Calculates the RBIs from the given AB
+def RBIs(batter_fate, first_fate, second_fate, third_fate):
+
+    RBIs = 0
+
+    if(batter_fate == 4):
+        RBIs += 1
+    if(first_fate == 4):
+        RBIs += 1
+    if(second_fate == 4):
+        RBIs += 1
+    if(third_fate == 4):
+        RBIs += 1
+
+    return RBIs
+
+
 #The runner first, second, third function take the base state as an int between 0 and 7 and return if
 #there is a runner on the appropriate bag (1 if true, else 0). Used as helper functions for calculations
 def runner_first(base_state):
@@ -149,6 +166,7 @@ def main():
     BaseDF['REC'] = -1.0
     BaseDF['TBA'] = -1.0
     BaseDF['TPBA'] = -1.0
+    BaseDF['RBI'] = -1
 
     #Keeps track of the number of AB per player which we count
     BaseDF['Qual. AB'] = 1
@@ -168,13 +186,18 @@ def main():
         TPBA_num = TPBA(runner_first(int(row['Start Bases'])), runner_second(int(row['Start Bases'])), runner_third(int(row['Start Bases'])))
         BaseDF.at[i, 'TPBA'] = TPBA_num
 
+        #Calculates the RBI using the RBIs function
+        RBI = RBIs(row["Batter Dest."], row["1B Runner Dest."], row["2B Runner Dest."], row["3B Runner Dest"])
+        BaseDF.at[i, 'RBI'] = RBI
+
+
     #Group the dataframe into player/year combos
     BaseDF = BaseDF.groupby(['NAME','Batter ID','Year']).sum()
 
     #Calculate the %TBA statistic
     BaseDF['%TBA'] = BaseDF['TBA']/BaseDF['TPBA']
 
-    BaseDF.to_csv('AdvancedBaseStats.csv', columns=['Qual. AB', 'REC', '%TBA'])
+    BaseDF.to_csv('AdvancedBaseStats.csv', columns=['Qual. AB', 'RBI', 'REC', '%TBA'])
     
 
 

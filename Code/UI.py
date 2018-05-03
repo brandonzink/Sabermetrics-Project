@@ -131,6 +131,32 @@ def player_stats(data, player_name):
 
     return
 
+#Plot the %TBA versus RBI stat
+def perTBA_v_RBI(data):
+    #Plot scatterplot
+    plt.scatter(data['%TBA'], data['RBI'], s=2)
+    #Labels
+    plt.ylabel('RBI')
+    plt.xlabel('%TBA')
+    plt.title('RBI v %TBA')
+
+    plt.xlim(0,0.6)
+
+    plt.show()
+    return
+
+#Plot the REC versus RBI stat
+def REC_v_RBI(data):
+    #Plot scatterplot
+    plt.scatter(data['REC'], data['RBI'], s=2)
+    #Labels
+    plt.ylabel('RBI')
+    plt.xlabel('REC')
+    plt.title('RBI v REC')
+
+    plt.show()
+    return
+
 #Print the menu, takes user inputs, and calls appropriate functions.
 def menu(data):
 
@@ -145,7 +171,9 @@ def menu(data):
     '6: Graph of %TBA v. REC',
     '7: Graph of %TBA by year',
     '8: Graph of REC by year',
-    '9: View %TBA and REC for a specific player']
+    '9: View %TBA and REC for a specific player',
+    '10: Graph of %TBA v. RBI',
+    '11: Graph of REC v. RBI']
 
     #Prints options, gets user inputs
     print('[ MENU ]')
@@ -191,6 +219,12 @@ def menu(data):
     elif int(option) == 9:
         name = input('Enter player name: > ')
         player_stats(data, name)
+
+    elif int(option) == 10:
+        perTBA_v_RBI(data)
+
+    elif int(option) == 11:
+        REC_v_RBI(data)
 
     else:
         print('Invalid option. Please try again.')
