@@ -1,8 +1,10 @@
 # Sabermetrics Project
 
+Explanation/Showcase Video: https://youtu.be/4OFdErojqLs
+
 This project introduced two new stats, %TBA and REC as explained in the 'Project Proposal.pdf' file. 
 
-In order to build this project, navigate to /Code directory and use the command 'python UI.py'. This will launch a window with different options to see the top X players for each stat and a variety of graphs. 
+In order to build this project, navigate to /Code directory and use the command 'python UI.py'. This will launch a window with different options to see the top X players for each stat and a variety of graphs. Make sure that the /Code/AdvancedBaseStats.csv file is in the same directory as /Code/UI.py.
 
 You can also inspect the 'AdvancedBaseStats.csv' in the /Code directory if you would like to mess around with the data yourself.
 
