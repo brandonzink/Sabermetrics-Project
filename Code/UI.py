@@ -105,6 +105,32 @@ def REC_by_year(data):
     data.boxplot(column=['REC'], by='Year')
     plt.show()
 
+#Prints out the year by year stats for each player
+def player_stats(data, player_name):
+
+    #Select the rows that match the player query
+    data = data.loc[data['NAME'] == player_name]
+
+    #If the query returns no players, return invalid
+    if data.empty:
+        print('')
+        print('Invalid player query.')
+        print('')
+        return
+    
+    else:
+        #Loops through the query results and prints it year by year
+        print('########################################################')
+        print('NAME \t\t\t YEAR \t AB \t %TBA \t REC')
+        print('------------------------------------------------')
+        for i, row in data.iterrows():
+                print(row['NAME'][:13],'\t\t',row['Year'],'\t',row['Qual. AB'],'\t',round(row['%TBA'], 3),'\t',round(row['REC'], 3))
+        print('########################################################')
+        print('')
+        return
+
+    return
+
 #Print the menu, takes user inputs, and calls appropriate functions.
 def menu(data):
 
@@ -119,8 +145,7 @@ def menu(data):
     '6: Graph of %TBA v. REC',
     '7: Graph of %TBA by year',
     '8: Graph of REC by year',
-    '9: Explanation of %TBA',
-    '10: Explanation of REC']
+    '9: View %TBA and REC for a specific player']
 
     #Prints options, gets user inputs
     print('[ MENU ]')
@@ -162,6 +187,10 @@ def menu(data):
 
     elif int(option) == 8:
         REC_by_year(data)
+
+    elif int(option) == 9:
+        name = input('Enter player name: > ')
+        player_stats(data, name)
 
     else:
         print('Invalid option. Please try again.')
